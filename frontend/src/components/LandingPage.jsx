@@ -24,17 +24,6 @@ const LandingPage = ({ onConnect, isLoading = false, error = null }) => {
             {/* Navigation */}
             <nav className="relative z-10 flex items-center justify-between p-6 max-w-6xl mx-auto">
                 <Logo size="md" />
-                <div className="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400">
-                    {APP_CONFIG.navLinks.map((link) => (
-                        <a
-                            key={link.label}
-                            href={link.href}
-                            className="hover:text-orange-500 transition-colors"
-                        >
-                            {link.label}
-                        </a>
-                    ))}
-                </div>
             </nav>
 
             <main className="relative z-10 max-w-5xl mx-auto px-6 pt-20 pb-24 text-center">
@@ -81,10 +70,18 @@ const LandingPage = ({ onConnect, isLoading = false, error = null }) => {
                         <ArrowRight size={20} className={`transition-transform duration-300 ${isHovered && !isLoading ? 'translate-x-1' : ''}`} />
                     </button>
 
-                    <p className="mt-6 text-zinc-600 text-xs font-medium">
-                        <Lock size={10} className="inline mr-1 -mt-0.5" />
-                        Secure OAuth connection. We do not store your data.
-                    </p>
+                    {/* Privacy & T&C Notice */}
+                    <div className="mt-6 max-w-md mx-auto space-y-2">
+                        <p className="text-zinc-600 text-xs font-medium flex items-center justify-center gap-1">
+                            <Lock size={10} className="inline" />
+                            Secure OAuth connection. We do not store your data.
+                        </p>
+                        <p className="text-zinc-500 text-xs leading-relaxed">
+                            By connecting, you agree to grant read-only access to your Strava activities. 
+                            We only access your public profile and activity data to generate your year summary. 
+                            No data is permanently stored on our servers.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Features Grid */}
