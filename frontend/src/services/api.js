@@ -1,4 +1,5 @@
 import { MOCK_DATA } from '../data/mockData.js';
+import logger from '../utils/logger.js';
 
 
 const USE_MOCK_DATA = false;
@@ -17,6 +18,8 @@ class ApiError extends Error {
 const httpClient = {
     async request(endpoint, options = {}) {
         const url = `${API_BASE_URL}${endpoint}`;
+        const method = options.method || 'GET';
+
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -31,9 +34,15 @@ const httpClient = {
             config.headers.Authorization = `Bearer ${token}`;
         }
 
+        // Log request
+        logger.apiRequest(method, endpoint, options.body);
+
         try {
             const response = await fetch(url, config);
             const data = await response.json().catch(() => null);
+
+            // Log response
+            logger.apiResponse(method, endpoint, response.status, data);
 
             if (!response.ok) {
                 throw new ApiError(
@@ -45,6 +54,7 @@ const httpClient = {
 
             return data;
         } catch (error) {
+            logger.error(`API request failed: ${method} ${endpoint}`, error);
             if (error instanceof ApiError) throw error;
             throw new ApiError(error.message || 'Network error', 0);
         }
@@ -133,10 +143,6 @@ const realAdapter = {
         return httpClient.patch('/api/user/preferences', preferences);
     }
 };
-
-// ============================================================================
-// PUBLIC API - Use this in components
-// ============================================================================
 
 const adapter = realAdapter;
 
